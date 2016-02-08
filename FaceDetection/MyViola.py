@@ -6,15 +6,25 @@ from AbstractClassifier import AbstractClassfier
 import itertools
 
 class _Feature:
+    """
+    This class represents Haar Rectangles and calculatating the difference between of them.
+    """
     def __init__(self, trans, plus, minus):
-        self.plus = plus
-        self.minus = minus
-        self.trans = trans
+        self.plus = plus  # Vector of rectangles. From him we subtract the second vector rectangle
+        self.minus = minus  # Second vector of rectangle. Him we subtractfrom the first rectangle
+        self.trans = trans  # The action we doing on the picture before subtracting one rectangle from second.
+                            # For instance, Gradient, Red color only.
 
     def calc(self, window_start):
+        """
+        This function calculating (by Integral Image) the difference between first rectangle to the second.
+        The difference defined as: (sum of rectangles in plus) - (sum of rectangles in minus)
+        :param window_start: Corner of the rectangle. From him we stating calculate rectangles.
+        :return: Value of the feature
+        """
         i, j = window_start
         result = 0
-        for (x, y) in self.plus:
+        for (x, y) in self.plus:  # (x,y) is rectangle in vector 'plus'. x is of the from (i,j)
             r = ((i+x[0], i+x[1]), (j+y[0], j+y[1]))
             result += self.trans.intimg.get_sum(r)
         for (x, y) in self.minus:
